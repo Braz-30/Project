@@ -170,7 +170,7 @@
 
     function renderOrderReview() {
       if (cart.length === 0) {
-        document.getElementById('order-review').innerHTML = '<p style="color:#d32f2f">Your cart is empty.</p>';
+        document.getElementById('order-review').innerHTML = '<p style="color:#d32f2f">Your cart is empty. <a href="index.html">Return to shop</a></p>';
         return;
       }
 
@@ -230,6 +230,11 @@
     function handleCheckout(e) {
       e.preventDefault();
 
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return false;
+      }
+
       const formData = new FormData(document.getElementById('checkout-form'));
       const orderData = {
         fullname: formData.get('fullname'),
@@ -259,8 +264,18 @@
       // Clear cart
       localStorage.removeItem('cart');
 
-      // Submit form to Formspree
+      // Show success message before submitting
+      alert('Order placed successfully!\n\nOrder ID: ' + (orders.length) + '\n\nThank you for your purchase.');
+
+      // Submit form to Formspree (this may not redirect on GitHub Pages, so we also redirect manually)
       document.getElementById('checkout-form').submit();
+      
+      // Fallback redirect after a delay
+      setTimeout(() => {
+        window.location = 'index.html';
+      }, 2000);
+
+      return false;
     }
 
     renderOrderReview();
